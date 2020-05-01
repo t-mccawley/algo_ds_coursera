@@ -1,5 +1,9 @@
 #include <iostream>
 #include <cassert>
+#include <chrono> 
+using namespace std::chrono;
+using std::cout;
+using std::endl;
 
 // The following code calls a naive algorithm for computing a Fibonacci number.
 //
@@ -23,8 +27,15 @@ int fibonacci_naive(int n) {
 
 int fibonacci_fast(int n) {
     // write your code here
-
-    return 0;
+    if (n == 0) return 0;
+    long int fib_prev = 0;
+    long int fib = 1;
+    for (int i = 2; i <= n; ++i) {
+        long int fib_new = fib + fib_prev;
+        fib_prev = fib;
+        fib = fib_new;
+    }
+    return fib;
 }
 
 void test_solution() {
@@ -32,14 +43,19 @@ void test_solution() {
     assert(fibonacci_fast(10) == 55);
     for (int n = 0; n < 20; ++n)
         assert(fibonacci_fast(n) == fibonacci_naive(n));
+    cout << "Done!" << endl;
 }
 
-int main() {
+int main() { 
     int n = 0;
     std::cin >> n;
 
-    std::cout << fibonacci_naive(n) << '\n';
-    //test_solution();
-    //std::cout << fibonacci_fast(n) << '\n';
+    auto start = high_resolution_clock::now();
+    // std::cout << fibonacci_naive(n) << '\n';
+    // test_solution();
+    std::cout << fibonacci_fast(n) << '\n';
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(stop - start); 
+    std::cout << "Elapsed Time [ms]: " << duration.count() << std::endl;
     return 0;
 }
